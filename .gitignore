@@ -128,4 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-sample-edifact/
+sample-edifact/AFTC*
+sample-edifact/PH*
+sample-edifact/ARSL*
