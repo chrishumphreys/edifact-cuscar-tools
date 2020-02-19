@@ -1,4 +1,16 @@
 {
+    "UNA" : {
+        "desc":"Service string advice",
+        "optionality" : "C",
+        "cardinality" : 1,
+        "contents" : [
+            {
+                "desc": "structure",
+                "optionality" : "M",
+                "length" : 6
+            }
+        ]
+    },
     "UNH" : {
         "desc":"Message header",
         "optionality" : "M",
@@ -7,7 +19,9 @@
             {
                 "desc": "message reference number",
                 "optionality" : "M",
-                "length" : 14
+                "length" : 14,
+                "pii" : true,
+                "generator" : "random_and_store"
             },
             {
                 "desc": "message identifier",
@@ -45,7 +59,10 @@
             {
                 "desc": "Common access reference",
                 "optionality" : "C",
-                "length" : 35
+                "length" : 35,
+                "pii" : true,
+                "generator" : "random"
+                
             },
             {
                 "desc": "Status of the transfer",
@@ -137,7 +154,9 @@
                     {
                         "desc": "Date/time/period",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : false,
+                        "generator" : "date_time_past"
                     },
                     {
                         "desc": "Date/time/period format qualifier",
@@ -204,7 +223,9 @@
                     {
                         "desc": "Reference number",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Line number",
@@ -238,7 +259,9 @@
                     {
                         "desc": "Place/location identification",
                         "optionality" : "C",
-                        "length" : 25
+                        "length" : 25,
+                        "pii" : true,
+                        "generator" : "random_code"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -255,7 +278,9 @@
                     {
                         "desc": "Place/location",
                         "optionality" : "C",
-                        "length" : 17
+                        "length" : 17,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
@@ -266,7 +291,9 @@
                     {
                         "desc": "Related Place/location one identification",
                         "optionality" : "C",
-                        "length" : 25
+                        "length" : 25,
+                        "pii" : true,
+                        "generator" : "random_code"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -283,7 +310,9 @@
                     {
                         "desc": "Related Place/location one",
                         "optionality" : "C",
-                        "length" : 17
+                        "length" : 17,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
@@ -294,7 +323,9 @@
                     {
                         "desc": "Related Place/location two identification",
                         "optionality" : "C",
-                        "length" : 25
+                        "length" : 25,
+                        "pii" : true,
+                        "generator" : "random_code"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -311,7 +342,9 @@
                     {
                         "desc": "Related Place/location two",
                         "optionality" : "C",
-                        "length" : 17
+                        "length" : 17,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
@@ -340,7 +373,9 @@
                     {
                         "desc": "Party id. identification",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random_and_store"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -363,27 +398,37 @@
                     {
                         "desc": "Name and address line",
                         "optionality" : "M",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Name and address line",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Name and address line",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Name and address line",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Name and address line",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
@@ -394,27 +439,37 @@
                     {
                         "desc": "Party Name",
                         "optionality" : "M",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Party Name",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Party Name",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Party Name",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Party Name",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Party Name format, coded",
@@ -431,39 +486,53 @@
                     {
                         "desc": "Street and number/p.o. box",
                         "optionality" : "M",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Street and number/p.o. box",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Street and number/p.o. box",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
             {
                 "desc": "City Name",
                 "optionality" : "C",
-                "length" : 35
+                "length" : 35,
+                "pii" : true,
+                "generator" : "random_city"
             },
             {
                 "desc": "Country sub-entity identification",
                 "optionality" : "C",
-                "length" : 9
+                "length" : 9,
+                "pii" : true,
+                "generator" : "random_country_sub_entry"
             },
             {
                 "desc": "Postcode identification",
                 "optionality" : "C",
-                "length" : 9
+                "length" : 9,
+                "pii" : true,
+                "generator" : "random"
             },
             {
                 "desc": "Country, coded",
                 "optionality" : "C",
-                "length" : 3
+                "length" : 3,
+                "pii" : true,
+                "generator" : "random_country"
             }
         ]
     },
@@ -491,7 +560,9 @@
                     {
                         "desc": "Free text, coded",
                         "optionality" : "M",
-                        "length" : 3
+                        "length" : 3,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -514,27 +585,37 @@
                     {
                         "desc": "Free text",
                         "optionality" : "M",
-                        "length" : 70
+                        "length" : 70,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Free text",
                         "optionality" : "C",
-                        "length" : 70
+                        "length" : 70,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Free text",
                         "optionality" : "C",
-                        "length" : 70
+                        "length" : 70,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Free text",
                         "optionality" : "C",
-                        "length" : 70
+                        "length" : 70,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Free text",
                         "optionality" : "C",
-                        "length" : 70
+                        "length" : 70,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
@@ -670,7 +751,9 @@
                     {
                         "desc": "Document/message number",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Document/message status, coded",
@@ -681,7 +764,9 @@
                     {
                         "desc": "Document/message source",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Language, coded",
@@ -715,7 +800,9 @@
                     {
                         "desc": "Equipment identification number",
                         "optionality" : "C",
-                        "length" : 17
+                        "length" : 17,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -798,7 +885,9 @@
             {
                 "desc": "message reference number",
                 "optionality" : "M",
-                "length" : 14
+                "length" : 14,
+                "pii": true,
+                "generator" : "random_and_store"
             }
         ]
     },
@@ -816,7 +905,9 @@
             {
                 "desc": "Conveyance reference number",
                 "optionality" : "C",
-                "length" : 17
+                "length" : 17,
+                "pii" : true,
+                "generator" : "random"
             },
             {
                 "desc": "Mode of transport",
@@ -858,7 +949,9 @@
                     {
                         "desc": "Carrier identification",
                         "optionality" : "C",
-                        "length" : 17
+                        "length" : 17,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -875,7 +968,9 @@
                     {
                         "desc": "Carrier name",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
@@ -915,7 +1010,9 @@
                     {
                         "desc": "Id. of means of transport identification",
                         "optionality" : "C",
-                        "length" : 9
+                        "length" : 9,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -932,7 +1029,9 @@
                     {
                         "desc": "Id. of the means of transport",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Nationality of means of transport, coded",
@@ -988,7 +1087,9 @@
                     {
                         "desc": "Type of packages",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Packaging related description code",
@@ -1168,7 +1269,9 @@
                     {
                         "desc": "Equipment identifier",
                         "optionality" : "C",
-                        "length" : 17
+                        "length" : 17,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Code list identification code",
@@ -1214,52 +1317,72 @@
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "M",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Shipping marks description",
                         "optionality" : "C",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     }
                 ]
             },
@@ -1350,7 +1473,9 @@
                     {
                         "desc": "Interchange sender identification",
                         "optionality" : "M",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Identification code qualifier",
@@ -1376,7 +1501,9 @@
                     {
                         "desc": "Interchange recipient identification",
                         "optionality" : "M",
-                        "length" : 35
+                        "length" : 35,
+                        "pii" : true,
+                        "generator" : "random"
                     },
                     {
                         "desc": "Identification code qualifier",
@@ -1435,7 +1562,9 @@
             {
                 "desc": "Application reference",
                 "optionality" : "C",
-                "length" : 14
+                "length" : 14,
+                "pii" : true,
+                "generator" : "random_and_store"
             },
             {
                 "desc": "Processing priority code",
