@@ -261,7 +261,7 @@
                         "optionality" : "C",
                         "length" : 25,
                         "pii" : true,
-                        "generator" : "random_code"
+                        "generator" : "random_location"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -293,7 +293,7 @@
                         "optionality" : "C",
                         "length" : 25,
                         "pii" : true,
-                        "generator" : "random_code"
+                        "generator" : "random_location"
                     },
                     {
                         "desc": "Code list qualifier",

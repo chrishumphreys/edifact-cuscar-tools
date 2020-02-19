@@ -12,15 +12,25 @@ python setup.py install
 
 To pretty print the CUSCAR file:
 
-python read.py sample-edifact/sample.edi 
+python print.py sample-edifact/sample.edi 
 
 To ignore missing code set values:
 
-python read.py --ignore_errors sample-edifact/sample.edi
+python print.py --ignore_errors sample-edifact/sample.edi
 
 To only display the unknown segment definitions (so you can expand the schema):
 
-python read.py --unknown sample-edifact/sample.edi  
+python print.py --unknown sample-edifact/sample.edi  
+
+### Generate from template
+
+#### display to stdout
+
+python generate.py  sample-edifact/template.edi
+
+#### write to file
+
+python generate.py  sample-edifact/template.edi output.edi
 
 ### Specification
 
