@@ -1431,7 +1431,9 @@
             {
                 "desc": "Interchange control reference",
                 "optionality" : "M",
-                "length" : 14
+                "length" : 14,
+                "pii" : true,
+                "generator" : "random_and_store"
             }
         ]
     },
@@ -1541,7 +1543,9 @@
             {
                 "desc": "Interchange control reference",
                 "optionality" : "M",
-                "length" : 14
+                "length" : 14,
+                "pii" : true,
+                "generator" : "random_and_store"
             },
             {
                 "desc": "Recipient's reference/password details",
