@@ -22,6 +22,8 @@ codelists = edifact.load_codesets(verbose)
 message = edifact.load_edifact(edifact_template)
 cuscar_schema = edifact.load_schema("cuscar.json", verbose)
 handler = generate_handler.GenerateHandler()
+handler.initialise()
+
 edifact.handle_message(message, cuscar_schema, codelists, verbose, True, False, handler)
 if edifact_output:
     edifact.save_edifact(edifact_output, message)

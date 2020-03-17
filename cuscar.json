@@ -278,9 +278,7 @@
                     {
                         "desc": "Place/location",
                         "optionality" : "C",
-                        "length" : 17,
-                        "pii" : true,
-                        "generator" : "random"
+                        "length" : 17
                     }
                 ]
             },
@@ -325,7 +323,7 @@
                         "optionality" : "C",
                         "length" : 25,
                         "pii" : true,
-                        "generator" : "random_code"
+                        "generator" : "random_location"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -516,9 +514,34 @@
             {
                 "desc": "Country sub-entity identification",
                 "optionality" : "C",
-                "length" : 9,
-                "pii" : true,
-                "generator" : "random_country_sub_entry"
+                "contents" : [
+                    {
+                        "desc": "Country sub-entity name code",
+                        "optionality" : "C",
+                        "length" : 9,
+                        "pii" : true,
+                        "generator" : "random"
+                    },
+                    {
+                        "desc": "Code list identification code",
+                        "optionality" : "C",
+                        "length" : 17,
+                        "codeset" : "1131"
+                    },
+                    {
+                        "desc": "Code list responsible agency, coded",
+                        "optionality" : "C",
+                        "length" : 3,
+                        "codeset" : "3055"
+                    },
+                    {
+                        "desc": "Country sub-entity name",
+                        "optionality" : "C",
+                        "length" : 70,
+                        "pii" : true,
+                        "generator" : "random"
+                    }
+                ]
             },
             {
                 "desc": "Postcode identification",
