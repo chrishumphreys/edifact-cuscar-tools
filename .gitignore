@@ -131,3 +131,5 @@ dmypy.json
 sample-edifact/AFTC*
 sample-edifact/PH*
 sample-edifact/ARSL*
+
+.idea/

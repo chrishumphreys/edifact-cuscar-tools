@@ -3,24 +3,27 @@
 ### Setup
 
 python3 -m venv edifact-cuscar-env
-. edifact-cuscar-env-env/bin/activate
+. edifact-cuscar-env/bin/activate
 
 git clone https://github.com/nerdocs/pydifact
+cd pydifact
 python setup.py install
+cd ..
+
 
 ### Pretty print
 
 To pretty print the CUSCAR file:
 
-python print.py sample-edifact/sample.edi 
+python print.py sample-edifact/simple.edi 
 
 To ignore missing code set values:
 
-python print.py --ignore_errors sample-edifact/sample.edi
+python print.py --ignore_errors sample-edifact/simple.edi
 
 To only display the unknown segment definitions (so you can expand the schema):
 
-python print.py --unknown sample-edifact/sample.edi  
+python print.py --unknown sample-edifact/simple.edi  
 
 ### Generate from template
 
