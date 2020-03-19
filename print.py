@@ -27,8 +27,8 @@ if args.verbose:
     verbose = True
 edifact_filename = args.file
 
-codelists = edifact.load_codesets(verbose)
+codeset_manager = edifact.CodesetManager(verbose, ignore_codeset_errors)
 message = edifact.load_edifact(edifact_filename)
 cuscar_schema = edifact.load_schema("cuscar.json", verbose)
 handler = print_handler.PrettyPrintHandler()
-edifact.handle_message(message, cuscar_schema, codelists, verbose, ignore_codeset_errors, show_only_unknown, handler)
+edifact.handle_message(message, cuscar_schema, codeset_manager, verbose, show_only_unknown, handler)

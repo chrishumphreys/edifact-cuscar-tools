@@ -3,12 +3,12 @@ import edifact as edifact
 class PrettyPrintHandler(edifact.Handler):
     _current_segment = []
 
-    def visit_codeset_element(self, data_element_schema, element, codeset, verbose, ignore_codeset_errors):
-        print("{} : '{}' ({})".format(data_element_schema["desc"], edifact.codeset_lookup(element, codeset, 
-            verbose, ignore_codeset_errors)["name"], element))
+    def visit_codeset_element(self, data_element_schema, element, codeset_manager, codeset_code, verbose):
+        codeset_value = codeset_manager.codeset_lookup(element, codeset_code)["name"]
+        print("{} : '{}' ({})".format(data_element_schema["desc"], codeset_value, element))
         return False, None
 
-    def visit_literal_element(self, data_element_schema, element):
+    def visit_literal_element(self, data_element_schema, element, codeset_manager):
         print("{} : {}".format(data_element_schema["desc"], element))
         return False, None
 
