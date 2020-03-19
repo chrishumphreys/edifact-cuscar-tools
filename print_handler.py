@@ -16,7 +16,6 @@ class PrettyPrintHandler(edifact.Handler):
         if len(self._current_segment) > 0:
             self._current_segment.pop()
         print("> {} ({}:{}) <".format(schema['desc'], schema['optionality'], schema['cardinality']))
-        print("Pushing {}".format(segment.tag))
         self._current_segment.append(segment)
 
     def visit_unknown_segment(self, segment):

@@ -373,7 +373,7 @@
                         "optionality" : "C",
                         "length" : 35,
                         "pii" : true,
-                        "generator" : "random_and_store"
+                        "generator" : "random_identification"
                     },
                     {
                         "desc": "Code list qualifier",
@@ -398,7 +398,7 @@
                         "optionality" : "M",
                         "length" : 35,
                         "pii" : true,
-                        "generator" : "random"
+                        "generator" : "random_address_line"
                     },
                     {
                         "desc": "Name and address line",
@@ -1054,7 +1054,7 @@
                         "optionality" : "C",
                         "length" : 35,
                         "pii" : true,
-                        "generator" : "random"
+                        "generator" : "random_transport"
                     },
                     {
                         "desc": "Nationality of means of transport, coded",

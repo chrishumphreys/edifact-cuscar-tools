@@ -53,6 +53,10 @@ class GenerateHandler(edifact.Handler):
     def generator_random_location_world(self):
         return random.choice(self.ports)
 
+    # Choose a random port form the pre-loaded port list
+    # attempt to use the location_function_code from the same segment
+    # if it looks like arrival - select a random GB port
+    # if it is something else - select a random worldwide port
     def generator_random_location(self, data_element_schema, element):
         if self.if_in_arrival_location():
             return self.generator_random_location_gb()
@@ -65,7 +69,34 @@ class GenerateHandler(edifact.Handler):
             if segment.tag == "LOC":
                 location_function_code = segment.elements[0]
                 return int(location_function_code) == self.ARRIVAL_LOCATION
+        return False
 
+    # Generate a random identification reference
+    # Attempt to use the associated party qualifier to prefix the code
+    # with either: "SU" for supplier, "CN" for consignee, "CZ" for consignor so 
+    # we can read who is who in the obfuscated data
+    def generator_random_identification(self, data_element_schema, element):
+        return self.nad_party_qualifier() + self.random_generator(15)
+
+    # Attempt to determine the qualifier
+    def nad_party_qualifier(self):
+        if len(self._current_segment) > 0:
+            segment = self._current_segment[-1]
+            if segment.tag == "NAD":
+                return segment.elements[0]
+        return "UNK"
+
+
+    # Generate a random address line
+    def generator_random_addressline(self, data_element_schema, element):
+        return self.random_generator(10) + "ADDR, TOWN, POSTCODE"
+
+    def generator_random_transport(self, data_element_schema, element):
+        return self.random_generator(20) + "TEST SHIP"
+
+    # Generate a randome value and store it under the element descriptor
+    # useful for message references which are global and used in multiple places
+    # in the message 
     def generator_random_and_store(self, data_element_schema, element):
         if data_element_schema["desc"] not in self.generated_value_store:
             new_value = self.random_generator(data_element_schema["length"])
@@ -76,13 +107,15 @@ class GenerateHandler(edifact.Handler):
         self.generators = {
             'random' : self.generator_random,
             'random_and_store' : self.generator_random_and_store,
-            'random_location' : self.generator_random_location
+            'random_location' : self.generator_random_location,
+            'random_identification' : self.generator_random_identification,
+            'random_address_line' : self.generator_random_addressline,
+            'random_transport' : self.generator_random_transport
         }   
 
     def initialise_codesets(self):
         codeset_dir = Path("codelists")
         self.ports, self.gb_ports = self.initialise_port_codesets(codeset_dir)
-        print("Initialised")
 
     def initialise_port_codesets(self, codeset_dir):
         ports_filename = codeset_dir.joinpath("ports.dat")
@@ -94,7 +127,7 @@ class GenerateHandler(edifact.Handler):
                 port_codes.append(code)
                 if line.startswith('GB'):
                     gb_port_codes.append(code)
-        print("Read {} port codes".format(len(port_codes)))
+        #print("Read {} port codes".format(len(port_codes)))
         return port_codes, gb_port_codes
 
     def initialise(self):
