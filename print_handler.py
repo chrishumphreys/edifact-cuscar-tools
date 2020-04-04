@@ -51,6 +51,7 @@ class JsonPrintHandler(edifact.Handler):
             desc = ""
         result = {
             "code" : data_element_schema["code"], 
+            "name" : data_element_schema["name"],
             "desc" : desc, 
             "value" : codeset_value,
             "value_coded" : element
@@ -65,6 +66,7 @@ class JsonPrintHandler(edifact.Handler):
             desc = ""
         result = {
             "code" : data_element_schema["code"], 
+            "name" : data_element_schema["name"],
             "desc" : desc, 
             "value" : element
         }
