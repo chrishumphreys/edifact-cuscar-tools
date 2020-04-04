@@ -1,6 +1,7 @@
 from pydifact.message import Message
 import json
 import abc
+from schema import load_schema, SchemaTraverser
 
 class CodesetManager():
     def __init__(self, verbose, ignore_codeset_errors):
@@ -61,6 +62,14 @@ class Handler(abc.ABC):
     def visit_unknown_segment(self, segment):
         pass
 
+    @abc.abstractmethod
+    def start(self):
+        pass
+
+    @abc.abstractmethod
+    def end(self):
+        pass
+
 def load_edifact(edifact_filename):
     return Message.from_file(edifact_filename)
 
@@ -69,15 +78,11 @@ def save_edifact(edifact_filename, message):
         edifact_file.write(message.serialize())
     print("Edifact written to:{}".format(edifact_filename))
  
-def load_schema(schema_file, verbose):
-    with open(schema_file) as json_file:
-        cuscar_schema = json.load(json_file)
-        if (verbose):
-            print(cuscar_schema)
-        return cuscar_schema
+def load_schema_file(schema_file, verbose):
+    return load_schema(schema_file, verbose=verbose)
 
 def is_composite(component):
-    return "contents" in component 
+    return component['element_type'] == 'Composite Attribute' 
 
 def is_codeset(component):
     return "codeset" in component 
@@ -99,15 +104,15 @@ def handle_element(data_element_schema, element, codeset_manager, verbose, handl
         print("Error {} whilst printing: {}".format(e, element))
         raise
 
-def handle_segment(segment, message_schema, codeset_manager, verbose, handler):
+def handle_segment(segment, segment_schema, schema_position, codeset_manager, verbose, handler):
     try:
-        schema = message_schema[segment.tag]
-        handler.visit_segment(segment, schema)
+        handler.visit_segment(segment, segment_schema, schema_position)
         if (verbose):
-            print(schema["contents"])
+            print(schema_position)
+            print(segment_schema["attributes"])
             print(segment)
         for index, element in enumerate(segment.elements, start=0):
-            data_element_schema = schema["contents"][index]
+            data_element_schema = segment_schema["attributes"][index]
             if is_composite(data_element_schema):
                 # schema suggests this is a composite element
                 if verbose:
@@ -115,14 +120,14 @@ def handle_segment(segment, message_schema, codeset_manager, verbose, handler):
                 if isinstance(element, list):
                     # multiple component data elements specified
                     for component_index, component_element in enumerate(element, start=0):
-                        component_schema = data_element_schema["contents"][component_index]
+                        component_schema = data_element_schema["attributes"][component_index]
                         updated, new_value = handle_element(component_schema, component_element, 
                             codeset_manager, verbose, handler)
                         if updated:
                             element[component_index] = new_value
                 else:
                     # Single component data element specified - assume first is sub element
-                    updated, new_value = handle_element(data_element_schema["contents"][0], element, codeset_manager, 
+                    updated, new_value = handle_element(data_element_schema["attributes"][0], element, codeset_manager, 
                         verbose, handler)
                     if updated:
                         segment.elements[index] = new_value
@@ -136,11 +141,14 @@ def handle_segment(segment, message_schema, codeset_manager, verbose, handler):
         raise  
 
 def handle_message(message, schema, codeset_manager, verbose, show_only_unknown, handler):
-    for segment in message.segments:
-        if segment.tag in schema:
-            if show_only_unknown:
-                pass
-            else:
-                handle_segment(segment, schema, codeset_manager, verbose, handler)
+    traverser = SchemaTraverser(schema)
+    handler.start()
+    for segment_index in range(0, len(message.segments)):
+        segment = message.segments[segment_index]
+        (segment_schema, schema_position) = traverser.find_segment_forward(segment.tag)
+        if segment_schema != None:
+            if not show_only_unknown:
+                handle_segment(segment, segment_schema, schema_position, codeset_manager, verbose, handler)
         else:
             handler.visit_unknown_segment(segment)
+    handler.end()

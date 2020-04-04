@@ -14,6 +14,7 @@ parser.add_argument('--unknown', action="store_true",
                    help='only display unknown segments')
 parser.add_argument('--verbose', action="store_true",
                    help='be verbose')
+parser.add_argument('--json', action="store_true", help="output json")
 
 args = parser.parse_args()
 ignore_codeset_errors = False
@@ -26,9 +27,15 @@ verbose=False
 if args.verbose:
     verbose = True
 edifact_filename = args.file
+write_json = False
+if args.json:
+    write_json = True
 
 codeset_manager = edifact.CodesetManager(verbose, ignore_codeset_errors)
 message = edifact.load_edifact(edifact_filename)
-cuscar_schema = edifact.load_schema("cuscar.json", verbose)
-handler = print_handler.PrettyPrintHandler()
+cuscar_schema = edifact.load_schema_file("cuscar-d95b.json", verbose)
+if write_json:
+    handler = print_handler.JsonPrintHandler()
+else:
+    handler = print_handler.PrettyPrintHandler()
 edifact.handle_message(message, cuscar_schema, codeset_manager, verbose, show_only_unknown, handler)

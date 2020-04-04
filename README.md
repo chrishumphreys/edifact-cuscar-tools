@@ -64,6 +64,7 @@ python generate.py sample-edifact/template.edi output.edi \
 
 used CUSCAR message specification found here:
 https://www.truugo.com/edifact/d03a/cuscar/
+https://www.truugo.com/edifact/d95b/cuscar/
 
 ### Extending
 

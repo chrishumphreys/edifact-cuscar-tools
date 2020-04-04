@@ -1,4 +1,32 @@
 {
+    "0001" : {
+        "data" : "codelists/codelist_0001.json",
+        "desc" : "Syntax identifier controlling agency"
+    },
+    "0002" : {
+        "data" : "codelists/codelist_0002.json",
+        "desc" : "Syntax version number"
+    },
+    "0007" : {
+        "data" : "codelists/codelist_0007.json",
+        "desc" : "Identification code qualifier"
+    },
+    "0025" : {
+        "data" : "codelists/codelist_0025.json",
+        "desc" : "Recipient reference/password qualifier"
+    },
+    "0029" : {
+        "data" : "codelists/codelist_0029.json",
+        "desc" : "Processing priority code"
+    },
+    "0031" : {
+        "data" : "codelists/codelist_0031.json",
+        "desc" : "Acknowledgement request"
+    },
+    "0035" : {
+        "data" : "codelists/codelist_0035.json",
+        "desc" : "Test indicator"
+    },
     "0051" : {
         "data" : "codelists/codelist_0051.json",
         "desc" : "Controlling agency"
@@ -10,6 +38,10 @@
     "0073" : {
         "data" : "codelists/codelist_0073.json",
         "desc" : "First/last sequence message transfer indication"
+    },
+    "0133" : {
+        "data" : "codelists/codelist_0133.json",
+        "desc" : "Character encoding"
     },
     "1001" : {
         "data" : "codelists/codelist_1001.json",

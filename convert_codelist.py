@@ -11,7 +11,7 @@ import argparse
 #name
 #desc
 
-#Tip you can get the codesets in thi format by copy-pasting the html from 
+#Tip you can get the codesets in this format by copy-pasting the html from 
 #https://www.truugo.com/edifact/d03a/cuscar/
 
 parser = argparse.ArgumentParser(description='Convert EDIFACT codeset to JSON')

@@ -26,8 +26,8 @@ edifact_output = args.output
 
 codeset_manager = edifact.CodesetManager(verbose, True)
 message = edifact.load_edifact(edifact_template)
-cuscar_schema = edifact.load_schema("cuscar.json", verbose)
-handler = generate_handler.GenerateHandler()
+cuscar_schema = edifact.load_schema_file("cuscar-d95b.json", verbose)
+generate_handler = generate_handler.GenerateHandler()
 specified_values = {}
 if args.consignee:
     specified_values["consignee"] = args.consignee
@@ -40,11 +40,11 @@ if args.carrier:
 if args.arrival:
     specified_values["arrival"] = args.arrival
 
-handler.initialise(specified_values)
+generate_handler.initialise(specified_values)
+edifact.handle_message(message, cuscar_schema, codeset_manager, verbose, False, generate_handler)
 
-edifact.handle_message(message, cuscar_schema, codeset_manager, verbose, False, handler)
 if edifact_output:
     edifact.save_edifact(edifact_output, message)
 else:
-    handler = print_handler.PrettyPrintHandler()
-    edifact.handle_message(message, cuscar_schema, codeset_manager, verbose, False, handler)
+    print_handler = print_handler.PrettyPrintHandler()
+    edifact.handle_message(message, cuscar_schema, codeset_manager, verbose, False, print_handler)

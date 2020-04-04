@@ -1,21 +1,21 @@
 import edifact
 import string
 import random
+import json
 from pathlib import Path
 
 
 
 class GenerateHandler(edifact.Handler):
-    _current_segment = []
 
     def visit_codeset_element(self, data_element_schema, element, codeset_manager, codeset_code, verbose):
         #leave untouched for now
         return False, element
 
     def visit_literal_element(self, data_element_schema, element, codeset_manager):
-        #print(data_element_schema)
-        if 'pii' in data_element_schema and data_element_schema['pii'] == True:
-            requested_generator = data_element_schema['generator']
+        code = data_element_schema['code']
+        if code in self._all_pii_attributes:
+            requested_generator = self._all_pii_attributes[code]['generator']
             if requested_generator in self.generators:
                 new_value = self.generators[requested_generator](data_element_schema, element, codeset_manager)
                 return True, new_value
@@ -23,17 +23,21 @@ class GenerateHandler(edifact.Handler):
                 raise Exception("Unknown generator {}".format(requested_generator))
         return False, element
 
-    def visit_segment(self, segment, schema):
+    def visit_segment(self, segment, schema, schema_position):
         #print("Entering segment:{}".format(segment.tag))
-        if len(self._current_segment) > 0:
-            self._current_segment.pop()
-        self._current_segment.append(segment)
-
+        self._current_segment = segment
+        
     def visit_unknown_segment(self, segment):
         #Stop if we don't understand the message - can't be sure there isn't PII in there
         msg = 'Unknown Segment tag: {}, content: {}'.format(segment.tag, segment.elements)
         raise Exception(msg)
 
+    def start(self):
+        pass
+
+    def end(self):
+        pass
+    
     # ----------------------------------------------------------------------------------------------
 
     generators = {}
@@ -57,8 +61,14 @@ class GenerateHandler(edifact.Handler):
     def random(self, size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for x in range(size))
 
+    def length_for_random(self, data_element_schema):
+        max_length = data_element_schema["content_length"]
+        if '..' in max_length:
+            max_length = max_length.split('..')[1]
+        return int(max_length)
+
     def generator_random(self, data_element_schema, element, codeset_manager):
-        return self.random(data_element_schema["length"])
+        return self.random(self.length_for_random(data_element_schema))
 
     def generate_random_location_gb(self):
         return random.choice(self.gb_ports)
@@ -89,10 +99,9 @@ class GenerateHandler(edifact.Handler):
         return self.ARRIVAL_LOCATION == location_type
 
     def loc_location_function_code(self):
-        if len(self._current_segment) > 0:
-            segment = self._current_segment[-1]
-            if segment.tag == self.LOCATION_SEGMENT_TAG:
-                return segment.elements[0]
+        if self._current_segment != None:
+            if self._current_segment.tag == self.LOCATION_SEGMENT_TAG:
+                return self._current_segment.elements[0]
         return None
 
     # Generate a random identification reference
@@ -113,10 +122,9 @@ class GenerateHandler(edifact.Handler):
 
     # Attempt to determine the qualifier
     def nad_party_qualifier(self):
-        if len(self._current_segment) > 0:
-            segment = self._current_segment[-1]
-            if segment.tag == self.NAME_ADDRESS_SEGMENT_TAG:
-                return segment.elements[0]
+        if self._current_segment != None:
+            if self._current_segment.tag == self.NAME_ADDRESS_SEGMENT_TAG:
+                return self._current_segment.elements[0]
         return "UNK"
 
 
@@ -133,10 +141,15 @@ class GenerateHandler(edifact.Handler):
     # useful for message references which are global and used in multiple places
     # in the message 
     def generator_random_and_store(self, data_element_schema, element, codeset_manager):
-        if data_element_schema["desc"] not in self.generated_value_store:
-            new_value = self.random(data_element_schema["length"])
-            self.generated_value_store[data_element_schema["desc"]] = new_value
-        return self.generated_value_store[data_element_schema["desc"]]
+        if data_element_schema["code"] not in self.generated_value_store:
+            new_value = self.random(self.length_for_random(data_element_schema))
+            self.generated_value_store[data_element_schema["code"]] = new_value
+        return self.generated_value_store[data_element_schema["code"]]
+
+    def generator_random_date_time_past(self, data_element_schema, element, codeset_manager):
+        # TODO Fix me. Need to check 2379 Date/time/period format qualifier
+        return element
+
 
     def initialise_generators(self):
         self.generators = {
@@ -145,7 +158,8 @@ class GenerateHandler(edifact.Handler):
             'random_location' : self.generator_random_location,
             'random_identification' : self.generator_random_identification,
             'random_address_line' : self.generator_random_addressline,
-            'random_transport' : self.generator_random_transport
+            'random_transport' : self.generator_random_transport,
+            'date_time_past' : self.generator_random_date_time_past
         }   
 
     def initialise_codesets(self):
@@ -170,6 +184,18 @@ class GenerateHandler(edifact.Handler):
         self.initialise_codesets()
         self.initialise_identities(specified_values)
         self.initialise_locations(specified_values)
+        self.initialise_pii()
+
+    def initialise_pii(self):
+        self._all_pii_attributes = {}
+        with open("pii.json") as json_file:
+            pii = json.load(json_file)
+        for segment in pii:
+            for attribute in pii[segment]:
+                attribute['segment'] = segment
+                code = attribute['code']
+                self._all_pii_attributes[code] = attribute
+
 
     def initialise_identities(self, specified_values):
         if "consignor" in specified_values:
