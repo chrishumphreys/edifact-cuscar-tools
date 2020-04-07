@@ -128,9 +128,11 @@ class GenerateHandler(edifact.Handler):
         return "UNK"
 
 
-    # Generate a random address line
     def generator_random_addressline(self, data_element_schema, element, codeset_manager):
         return self.random(10) + "ADDR, TOWN, POSTCODE"
+
+    def generator_random_city(self, data_element_schema, element, codeset_manager):
+        return self.random(10) + "CITY"
 
     def generator_random_transport(self, data_element_schema, element, codeset_manager):
         self._transport_name = self.random(8) + " SHIP"
@@ -159,7 +161,8 @@ class GenerateHandler(edifact.Handler):
             'random_identification' : self.generator_random_identification,
             'random_address_line' : self.generator_random_addressline,
             'random_transport' : self.generator_random_transport,
-            'date_time_past' : self.generator_random_date_time_past
+            'date_time_past' : self.generator_random_date_time_past,
+            'random_city' : self.generator_random_city
         }   
 
     def initialise_codesets(self):

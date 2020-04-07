@@ -2252,6 +2252,176 @@
                         ]
                     }
                 ]
+            },
+            {
+                "code": "LOC",
+                "desc": "A segment to specify the Customs clearance office/place, place of origin of carriage, place of acceptance by importing carrier, place of ultimate destination of goods, place of transhipment, place of departure, place of customs examination and place/port of discharge.",
+                "element_type": "Segment",
+                "name": "PLACE/LOCATION IDENTIFICATION",
+                "conditional": "Conditional",
+                "cardinality": "99",
+                "attributes": [
+                    {
+                        "code": "3227",
+                        "desc": "Code identifying the function of a location.",
+                        "name": "PLACE/LOCATION QUALIFIER",
+                        "element_type": "Attribute",
+                        "content_length": "0..3",
+                        "conditional": "Mandatory",
+                        "content_type": "an",
+                        "codeset": "3227"
+                    },
+                    {
+                        "code": "C517",
+                        "desc": "Identification of a location by code or name.",
+                        "name": "LOCATION IDENTIFICATION",
+                        "element_type": "Composite Attribute",
+                        "conditional": "Conditional",
+                        "attributes": [
+                            {
+                                "code": "3225",
+                                "desc": "Identification of the name of place/location, other than 3164 City name.",
+                                "name": "Place/location identification",
+                                "element_type": "Attribute",
+                                "content_length": "0..25",
+                                "conditional": "Conditional",
+                                "content_type": "an"
+                            },
+                            {
+                                "code": "1131",
+                                "desc": "Identification of a code list.",
+                                "name": "Code list qualifier",
+                                "element_type": "Attribute",
+                                "content_length": "0..3",
+                                "conditional": "Conditional",
+                                "content_type": "an",
+                                "codeset": "1131"
+                            },
+                            {
+                                "code": "3055",
+                                "desc": "Code identifying the agency responsible for a code list.",
+                                "name": "Code list responsible agency, coded",
+                                "element_type": "Attribute",
+                                "content_length": "0..3",
+                                "conditional": "Conditional",
+                                "content_type": "an",
+                                "codeset": "3055"
+                            },
+                            {
+                                "code": "3224",
+                                "desc": "Name of place/location, other than 3164 City name.",
+                                "name": "Place/location",
+                                "element_type": "Attribute",
+                                "content_length": "0..17",
+                                "conditional": "Conditional",
+                                "content_type": "an"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "C519",
+                        "desc": "Identification the first related location by code or name.",
+                        "name": "RELATED LOCATION ONE IDENTIFICATION",
+                        "element_type": "Composite Attribute",
+                        "conditional": "Conditional",
+                        "attributes": [
+                            {
+                                "code": "3223",
+                                "desc": "Specification of the first related place/location by code.",
+                                "name": "Related place/location one identification",
+                                "element_type": "Attribute",
+                                "content_length": "0..25",
+                                "conditional": "Conditional",
+                                "content_type": "an"
+                            },
+                            {
+                                "code": "1131",
+                                "desc": "Identification of a code list.",
+                                "name": "Code list qualifier",
+                                "element_type": "Attribute",
+                                "content_length": "0..3",
+                                "conditional": "Conditional",
+                                "content_type": "an",
+                                "codeset": "1131"
+                            },
+                            {
+                                "code": "3055",
+                                "desc": "Code identifying the agency responsible for a code list.",
+                                "name": "Code list responsible agency, coded",
+                                "element_type": "Attribute",
+                                "content_length": "0..3",
+                                "conditional": "Conditional",
+                                "content_type": "an",
+                                "codeset": "3055"
+                            },
+                            {
+                                "code": "3222",
+                                "desc": "Specification of the first related place/location by name.",
+                                "name": "Related place/location one",
+                                "element_type": "Attribute",
+                                "content_length": "0..70",
+                                "conditional": "Conditional",
+                                "content_type": "an"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "C553",
+                        "desc": "Identification of second related location by code or name.",
+                        "name": "RELATED LOCATION TWO IDENTIFICATION",
+                        "element_type": "Composite Attribute",
+                        "conditional": "Conditional",
+                        "attributes": [
+                            {
+                                "code": "3233",
+                                "desc": "Specification of a second related place/location by code.",
+                                "name": "Related place/location two identification",
+                                "element_type": "Attribute",
+                                "content_length": "0..25",
+                                "conditional": "Conditional",
+                                "content_type": "an"
+                            },
+                            {
+                                "code": "1131",
+                                "desc": "Identification of a code list.",
+                                "name": "Code list qualifier",
+                                "element_type": "Attribute",
+                                "content_length": "0..3",
+                                "conditional": "Conditional",
+                                "content_type": "an",
+                                "codeset": "1131"
+                            },
+                            {
+                                "code": "3055",
+                                "desc": "Code identifying the agency responsible for a code list.",
+                                "name": "Code list responsible agency, coded",
+                                "element_type": "Attribute",
+                                "content_length": "0..3",
+                                "conditional": "Conditional",
+                                "content_type": "an",
+                                "codeset": "3055"
+                            },
+                            {
+                                "code": "3232",
+                                "desc": "Specification of a second related place/location by name.",
+                                "name": "Related place/location two",
+                                "element_type": "Attribute",
+                                "content_length": "0..70",
+                                "conditional": "Conditional",
+                                "content_type": "an"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "5479",
+                        "desc": "To specify the relationship between two or more items.",
+                        "name": "RELATION, CODED",
+                        "element_type": "Attribute",
+                        "content_length": "0..3",
+                        "conditional": "Conditional",
+                        "content_type": "an"
+                    }
+                ]
             }
         ]
     },
