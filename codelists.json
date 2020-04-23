@@ -99,6 +99,10 @@
         "data" : "codelists/codelist_4219.json",
         "desc" : "Transport service priority code"
     },
+    "4215" : {
+        "data" : "codelists/codelist_4215.json",
+        "desc" : "Transport charges method of payment code"
+    },
     "4233" : {
         "data" : "codelists/codelist_4233.json",
         "desc" : "Marking instructions code"
@@ -118,6 +122,10 @@
     "4517" : {
         "data" : "codelists/codelist_4517.json",
         "desc" : "Seal condition code"
+    },
+    "5237" : {
+        "data" : "codelists/codelist_5237.json",
+        "desc" : "Charge category code"
     },
     "6069" : {
         "data" : "codelists/codelist_6069.json",

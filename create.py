@@ -3,6 +3,7 @@ from pydifact.segments import Segment
 import string
 import random
 from datetime import datetime, timedelta
+from pathlib import Path
 import argparse
 
 def random_string(size=6, chars=string.ascii_uppercase + string.digits):
@@ -60,12 +61,14 @@ def add_equipment(message : Message, equipment_data : dict):
     message.add_segment(Segment("MEA","AAE", "AAW", ["MTQ", "100" ])) # volume
     
 def add_consigments(message : Message, message_data : dict):
-    add_consigment_details(message, message_data['consignment'])
+    consignments = message_data['consignments']
+    for consignment in consignments:
+        add_consigment_details(message, consignment)
 
 # GRP5 A group of segments specifying the details of each consignment.
 def add_consigment_details(message : Message, consignment : dict):
     #CNI+1+DOCV373MOB909999'
-    message.add_segment(Segment("CNI", "1", consignment['cni_document_number'] + "-0")) # master bill number
+    message.add_segment(Segment("CNI", consignment['cni_sequence_number'], consignment['cni_document_number'] + "-0")) # master bill number
     #RFF+BM:DOCV373MOB909999'
     message.add_segment(Segment("RFF", ["BM", consignment['cni_document_number']]))
     #CNT+7:55814:KGM'
@@ -97,6 +100,45 @@ def add_consigment_details(message : Message, consignment : dict):
     #PCI+24+SHIP1234'
     message.add_segment(Segment("PCI", "24", consignment['shipping_marks']))
 
+def generate_random_location_gb(gb_ports):
+    return random.choice(gb_ports)
+
+def generate_random_location_world(ports):
+    return random.choice(ports)
+
+def initialise_port_codesets(codeset_dir):
+    ports_filename = codeset_dir.joinpath("ports.dat")
+    port_codes = []
+    gb_port_codes = []
+    with open(ports_filename, "rt") as textFile:
+        for line in textFile.readlines():
+            code = line.strip()
+            port_codes.append(code)
+            if line.startswith('GB'):
+                gb_port_codes.append(code)
+    return port_codes, gb_port_codes
+
+def generate_consignment(consignment_number : str):
+    consignment = {
+        "cni_sequence_number" : consignment_number,
+        "supplier" : supplier,
+        "consignee" : consignee,
+        "consignor" : consignor,
+        "cni_document_number" : f"DOC{random_string(size=12)}",
+        "total_gross_weight" : "55814",
+        "number_of_pieces" : "60",
+        "shipping_marks" : f"SHPM{random_string(size=12)}",
+        "departure_port" : specified_values["departure"],
+        "arrival_port" : specified_values["arrival"],
+        "equipment_identification_number" : equipment['identification_number']
+    }
+    return consignment
+
+def generate_consignments(number_of_consignments : int):
+    consigments = []
+    for consignment_number in range(0, number_of_consignments):
+        consigments.append(generate_consignment(str(consignment_number + 1)))
+    return consigments
 
 if __name__ == '__main__':
 
@@ -107,7 +149,11 @@ if __name__ == '__main__':
     parser.add_argument('--carrier', metavar='carrier', nargs='?', type=str, help='use specified carrier (Document/message issuer/sender) identity rather than random')
     parser.add_argument('--arrival', metavar='arrival', nargs='?', type=str, help='use specified arrival port code rather than random GB port')
     parser.add_argument('--departure', metavar='departure', nargs='?', type=str, help='use specified departure port code rather than random port')
+    parser.add_argument('--consignments', metavar='consignments', nargs='?', type=int, default=1, help='Number of consignments to add')
     args = parser.parse_args()
+    
+    number_of_consignments = args.consignments
+    port_codes, gb_port_codes = initialise_port_codesets(Path('codelists'))
     specified_values = {}
     if args.consignee:
         specified_values["consignee"] = args.consignee
@@ -128,11 +174,11 @@ if __name__ == '__main__':
     if args.arrival:
         specified_values["arrival"] = args.arrival
     else:
-         specified_values["arrival"] = "GBPME"
+         specified_values["arrival"] = generate_random_location_gb(gb_port_codes)
     if args.departure:
         specified_values["departure"] = args.departure
     else:
-        specified_values["departure"] = "IEDUB"
+        specified_values["departure"] = generate_random_location_world(port_codes)
 
 
     now = datetime.now()
@@ -153,23 +199,11 @@ if __name__ == '__main__':
         "name-address" : f"{specified_values['consignor']} PERSON, A COMPANY, SOMEWHERE"
     }
 
-    eqiupment = {
+    equipment = {
         "identification_number" : f"EQ{random_string(size=8)}",
         "total_gross_weight" : "55814"
     }
 
-    consignment = {
-        "supplier" : supplier,
-        "consignee" : consignee,
-        "consignor" : consignor,
-        "cni_document_number" : f"DOC{random_string(size=12)}",
-        "total_gross_weight" : "55814",
-        "number_of_pieces" : "60",
-        "shipping_marks" : f"SHPM{random_string(size=12)}",
-        "departure_port" : specified_values["departure"],
-        "arrival_port" : specified_values["arrival"],
-        "equipment_identification_number" : eqiupment['identification_number']
-    }
     message_data = {
         "message_reference_number" : f"MREF{random_string(size=10)}",
         "sender_identification" : "SENDER",
@@ -187,8 +221,8 @@ if __name__ == '__main__':
         "arrival_port" : specified_values["arrival"],
         "arrival_datetime_estimated" : arrival.strftime("%Y%m%d%H%M"),
         "arrival_datetime_scheduled" : arrival.strftime("%Y%m%d%H%M"),
-        "equipment" : eqiupment,
-        "consignment" : consignment
+        "equipment" : equipment,
+        "consignments" : generate_consignments(number_of_consignments)
     }
 
 
