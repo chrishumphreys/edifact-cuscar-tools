@@ -70,27 +70,27 @@ You can specify various options for parties/ports in the message:
 
 ```
 python create.py \
---consignee "A Consignee" \
---consignor "A Consignor" \
---supplier "A Supplier" \
---carrier "A Carrier" \
---arrival "GBPME" \
---departure "JPNAO"
+    --consignee "A Consignee" \
+    --consignor "A Consignor" \
+    --supplier "A Supplier" \
+    --carrier "A Carrier" \
+    --arrival "GBPME" \
+    --departure "JPNAO"
 ```
 
 You can adjust the size of the message by specifying number of equipments and consignments to include:
 
 ```
 python create.py \
---consignments 10
---equipments 10
+    --consignments 10 \
+    --equipments 10
 ```
 
 You can also generate a template message instead of a real message for use by data-doser by:
 
 ```
 python create.py \
-  --doser argument.
+    --doser argument.
 ```
 
 ### Specification
