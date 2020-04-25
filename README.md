@@ -60,6 +60,28 @@ python generate.py sample-edifact/template.edi output.edi \
 --arrival "GBPME"
 ```
 
+### Creating synthetic data of various sizes
+
+```
+python create.py
+```
+
+You can specify various options for parties/ports in the message:
+
+--consignor : use specified consignor (sender) identity rather than random
+--consignee : use specified consignee (buyer) identity rather than random
+--supplier : use specified supplier identity rather than random
+--carrier : use specified carrier (Document/message issuer/sender) identity rather than random
+--arrival : use specified arrival port code rather than random GB port
+--departure : use specified departure port code rather than random port
+
+You can adjust the size of the message by specifying number of equipments and consignments to include
+
+--consignments : Number of consignments to add
+--equipments : Number of equipments to add
+
+You can also generate a template message instead of a real message for use by data-doser by specigying the --doser argument.
+
 ### Specification
 
 used CUSCAR message specification found here:

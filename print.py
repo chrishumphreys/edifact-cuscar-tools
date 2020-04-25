@@ -1,5 +1,9 @@
 # Pretty print a cuscar edifact message
 
+__author__ = "Chris Humphreys"
+__version__ = "1.0.0"
+__license__ = "GPL3"
+
 import json
 import edifact
 import argparse

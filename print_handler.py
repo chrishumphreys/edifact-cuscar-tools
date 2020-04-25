@@ -1,3 +1,7 @@
+__author__ = "Chris Humphreys"
+__version__ = "1.0.0"
+__license__ = "GPL3"
+
 import edifact as edifact
 import json
 import abc

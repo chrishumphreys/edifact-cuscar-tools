@@ -14,6 +14,10 @@ import argparse
 #Tip you can get the codesets in this format by copy-pasting the html from 
 #https://www.truugo.com/edifact/d03a/cuscar/
 
+__author__ = "Chris Humphreys"
+__version__ = "1.0.0"
+__license__ = "GPL3"
+
 parser = argparse.ArgumentParser(description='Convert EDIFACT codeset to JSON')
 parser.add_argument('file', metavar='file', type=str, help='file to convert')
 args = parser.parse_args()

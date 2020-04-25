@@ -1,5 +1,9 @@
 import json
 
+__author__ = "Chris Humphreys"
+__version__ = "1.0.0"
+__license__ = "GPL3"
+
 def load_schema(schema_file, interchange_header_file = "unb.json", 
 interchange_trailer_file = "unz.json", service_string_advice_file = "una.json", verbose = False):
     # combine UNB definition with the supplied CUSCAR message definition

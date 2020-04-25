@@ -1,3 +1,9 @@
+#Create a synthetic cuscar edifact message of various sizes
+
+__author__ = "Chris Humphreys"
+__version__ = "1.0.0"
+__license__ = "GPL3"
+
 from pydifact.message import Message
 from pydifact.segments import Segment
 import string
@@ -65,6 +71,11 @@ def add_consigments(message : Message, message_data : dict):
     for consignment in consignments:
         add_consigment_details(message, consignment)
 
+def add_equipments(message : Message, message_data : dict):
+    equipments = message_data['equipments']
+    for equipment in equipments:
+        add_equipment(message, equipment)
+
 # GRP5 A group of segments specifying the details of each consignment.
 def add_consigment_details(message : Message, consignment : dict):
     #CNI+1+DOCV373MOB909999'
@@ -118,7 +129,14 @@ def initialise_port_codesets(codeset_dir):
                 gb_port_codes.append(code)
     return port_codes, gb_port_codes
 
-def generate_consignment(consignment_number : str):
+def generate_equipment(equipment_number : str):
+    equipment = {
+        "identification_number" : f"EQ{random_string(size=8)}",
+        "total_gross_weight" : "55814"
+    }
+    return equipment
+
+def generate_consignment(consignment_number : str, equipment_identification_number : str):
     consignment = {
         "cni_sequence_number" : consignment_number,
         "supplier" : supplier,
@@ -130,14 +148,23 @@ def generate_consignment(consignment_number : str):
         "shipping_marks" : f"SHPM{random_string(size=12)}",
         "departure_port" : specified_values["departure"],
         "arrival_port" : specified_values["arrival"],
-        "equipment_identification_number" : equipment['identification_number']
+        "equipment_identification_number" : equipment_identification_number
     }
     return consignment
 
-def generate_consignments(number_of_consignments : int):
+def generate_equipments(number_of_equipments : int):
+    equipments = []
+    equipment_references = []
+    for equipment_number in range(0, number_of_equipments):
+        equipments.append(generate_equipment(str(equipment_number)))
+        equipment_references.append(equipments[-1]['identification_number'])
+    return equipments, equipment_references
+
+def generate_consignments(number_of_consignments : int, equipment_ids : list):
     consigments = []
     for consignment_number in range(0, number_of_consignments):
-        consigments.append(generate_consignment(str(consignment_number + 1)))
+        equipment_id = random.choice(equipment_ids)
+        consigments.append(generate_consignment(str(consignment_number + 1), equipment_id))
     return consigments
 
 if __name__ == '__main__':
@@ -150,9 +177,13 @@ if __name__ == '__main__':
     parser.add_argument('--arrival', metavar='arrival', nargs='?', type=str, help='use specified arrival port code rather than random GB port')
     parser.add_argument('--departure', metavar='departure', nargs='?', type=str, help='use specified departure port code rather than random port')
     parser.add_argument('--consignments', metavar='consignments', nargs='?', type=int, default=1, help='Number of consignments to add')
+    parser.add_argument('--equipments', metavar='equipments', nargs='?', type=int, default=1, help='Number of equipments to add')
+    parser.add_argument('--doser', action="store_true", default=False, help='Generate a template for data-doser')
     args = parser.parse_args()
     
     number_of_consignments = args.consignments
+    number_of_equipments = args.equipments
+    generate_data_doser_template = args.doser
     port_codes, gb_port_codes = initialise_port_codesets(Path('codelists'))
     specified_values = {}
     if args.consignee:
@@ -204,6 +235,7 @@ if __name__ == '__main__':
         "total_gross_weight" : "55814"
     }
 
+    equipments, equipment_ids = generate_equipments(number_of_equipments)
     message_data = {
         "message_reference_number" : f"MREF{random_string(size=10)}",
         "sender_identification" : "SENDER",
@@ -221,17 +253,25 @@ if __name__ == '__main__':
         "arrival_port" : specified_values["arrival"],
         "arrival_datetime_estimated" : arrival.strftime("%Y%m%d%H%M"),
         "arrival_datetime_scheduled" : arrival.strftime("%Y%m%d%H%M"),
-        "equipment" : equipment,
-        "consignments" : generate_consignments(number_of_consignments)
+        "equipments" : equipments,
+        "consignments" : generate_consignments(number_of_consignments, equipment_ids)
     }
 
+    if generate_data_doser_template:
+        # use strings for the data-doser template variables so the generated edi can be used as a template
+        message_data['message_reference_number'] = '$msg_ref'
+        message_data['send_date'] = '$send_date'
+        message_data['send_time'] = '$send_time'
+        message_data['means_of_transport'] = '$ship'
+        message_data['interchangeControlReference'] = '$src_number'
+        message_data['message_reference_number'] = '$msg_ref'
 
     message = Message()
     add_headers(message, message_data)
     add_cargo_report_sender_info(message, message_data)
     add_details_of_transport_and_arrival(message, message_data)
     add_general_indicator(message, message_data)
-    add_equipment(message, message_data['equipment'])
+    add_equipments(message, message_data)
     add_consigments(message, message_data)
     add_footer(message, message_data)
     print(message.serialize())
