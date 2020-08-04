@@ -103,7 +103,7 @@ def add_consigment_details(message : Message, consignment : dict):
     #GID+1+2880:UNT'
     message.add_segment(Segment("GID", "1", ["28880", "UNT"])) # num packages
     #FTX+AAA+++FREETEXT DESC, DETAILS'
-    message.add_segment(Segment("FTX", "AAA", None, None, "good description"))
+    message.add_segment(Segment("FTX", "AAA", None, None, specified_values["goods"]))
     #MEA+AAE+G+KGM:55814'
     message.add_segment(Segment("MEA", "AAE", "G", ["KGM", consignment['total_gross_weight']]))
     #SGP+EQ123456+60'
@@ -178,6 +178,8 @@ if __name__ == '__main__':
     parser.add_argument('--departure', metavar='departure', nargs='?', type=str, help='use specified departure port code rather than random port')
     parser.add_argument('--consignments', metavar='consignments', nargs='?', type=int, default=1, help='Number of consignments to add')
     parser.add_argument('--equipments', metavar='equipments', nargs='?', type=int, default=1, help='Number of equipments to add')
+    parser.add_argument('--goods', metavar='goods', nargs='?', type=str, help='Goods description')
+    parser.add_argument('--vessel', metavar='vessel', nargs='?', type=str, help='Means of transport (vessel name)')
     parser.add_argument('--doser', action="store_true", default=False, help='Generate a template for data-doser')
     args = parser.parse_args()
     
@@ -210,24 +212,34 @@ if __name__ == '__main__':
         specified_values["departure"] = args.departure
     else:
         specified_values["departure"] = generate_random_location_world(port_codes)
-
+    if args.goods:
+        FTX_STR_LEN = 70
+        NUM_FTX_STRS = 5
+        goods_input = args.goods[0:(FTX_STR_LEN*NUM_FTX_STRS)]
+        specified_values["goods"]=[goods_input[y-FTX_STR_LEN:y] for y in range(FTX_STR_LEN, len(goods_input)+FTX_STR_LEN,FTX_STR_LEN)]
+    else:
+        specified_values["goods"] = ["good description"]
+    if args.vessel:
+        specified_values["means_of_transport"] = args.vessel
+    else:
+        specified_values["means_of_transport"] = f"TEST SHIP {random_string(size=10)}"
 
     now = datetime.now()
     arrival = now  + timedelta(days=30)
 
     supplier = {
         "id" : specified_values["supplier"],
-        "name-address" : f"{specified_values['supplier']} PERSON, A COMPANY, SOMEWHERE"
+        "name-address" : f"{specified_values['supplier']} PERSON, {specified_values['supplier']} COMPANY, SOMEWHERE"
     }
 
     consignee = {
         "id" : specified_values["consignee"],
-        "name-address" : f"{specified_values['consignee']} PERSON, A COMPANY, SOMEWHERE"
+        "name-address" : f"{specified_values['consignee']} PERSON, {specified_values['consignee']} COMPANY, SOMEWHERE"
     }
 
     consignor = {
         "id" : specified_values["consignor"],
-        "name-address" : f"{specified_values['consignor']} PERSON, A COMPANY, SOMEWHERE"
+        "name-address" : f"{specified_values['consignor']} PERSON, {specified_values['consignor']} COMPANY, SOMEWHERE"
     }
 
     equipment = {
@@ -249,7 +261,7 @@ if __name__ == '__main__':
         "conveyance_reference_number" : f"TRANS{random_string(size=10)}",
         "carrier_name" : specified_values['carrier'],
         "means_of_transport_identification" : random_string(size=8),
-        "means_of_transport" : f"TEST SHIP {random_string(size=10)}",
+        "means_of_transport" : specified_values["means_of_transport"],
         "arrival_port" : specified_values["arrival"],
         "arrival_datetime_estimated" : arrival.strftime("%Y%m%d%H%M"),
         "arrival_datetime_scheduled" : arrival.strftime("%Y%m%d%H%M"),
