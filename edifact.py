@@ -2,7 +2,7 @@ __author__ = "Chris Humphreys"
 __version__ = "1.0.0"
 __license__ = "GPL3"
 
-from pydifact.message import Message
+from pydifact.segmentcollection import SegmentCollection
 import json
 import abc
 from schema import load_schema, SchemaTraverser
@@ -75,7 +75,7 @@ class Handler(abc.ABC):
         pass
 
 def load_edifact(edifact_filename):
-    return Message.from_file(edifact_filename)
+    return SegmentCollection.from_file(edifact_filename)
 
 def save_edifact(edifact_filename, message):
     with open(edifact_filename, 'w') as edifact_file:

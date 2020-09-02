@@ -4,7 +4,7 @@ __author__ = "Chris Humphreys"
 __version__ = "1.0.0"
 __license__ = "GPL3"
 
-from pydifact.message import Message
+from pydifact.segmentcollection import SegmentCollection
 from pydifact.segments import Segment
 import string
 import random
@@ -18,7 +18,7 @@ def random_string(size=6, chars=string.ascii_uppercase + string.digits):
 #UNB+UNOB:2+SENDER+RECIPIENT+191021:1052+SRC-000001'
 #UNH+MREF123456+CUSCAR:D:95B:UN:LOT10'
 #BGM+85+DOCREF1234+9'
-def add_headers(message : Message, message_data : dict):
+def add_headers(message : SegmentCollection, message_data : dict):
     message.add_segment(Segment("UNB", ["UNOB", "2"], message_data['sender_identification'], 
         message_data['recipient_identification'], [message_data['send_date'], message_data['send_time']], 
         message_data['interchangeControlReference']))
@@ -27,7 +27,7 @@ def add_headers(message : Message, message_data : dict):
 
 #UNT+313+MREF123456'
 #UNZ+1+SRC-000001'
-def add_footer(message : Message, message_data : dict):
+def add_footer(message : SegmentCollection, message_data : dict):
     number_of_segments = len(message.segments)
     message.add_segment(Segment("UNT", str(number_of_segments), message_data['message_reference_number']))
     message.add_segment(Segment("UNZ", "1", message_data['interchangeControlReference'])) 
@@ -36,7 +36,7 @@ def add_footer(message : Message, message_data : dict):
 #DTM+137:201910210852:203'
 #RFF+SS:AREF1234567A'
 #NAD+MS+SCR:172:20'
-def add_cargo_report_sender_info(message : Message, message_data : dict):
+def add_cargo_report_sender_info(message : SegmentCollection, message_data : dict):
     message.add_segment(Segment("DTM", [ "137", message_data['submit_to_customs_timestamp'], "203"]))
     message.add_segment(Segment("RFF", ["SS", message_data['sellers_message_reference_number']]))
     message.add_segment(Segment("NAD", "MS", [message_data['sender_identification'], "172", "20"]))
@@ -45,7 +45,7 @@ def add_cargo_report_sender_info(message : Message, message_data : dict):
 #LOC+60+GBPME::139'
 #DTM+132:201910290330:203'
 #DTM+232:201910290330:203'
-def add_details_of_transport_and_arrival(message : Message, message_data : dict):
+def add_details_of_transport_and_arrival(message : SegmentCollection, message_data : dict):
     message.add_segment(Segment("TDT", "20", message_data['conveyance_reference_number'], "1", None, 
         [ message_data['sender_identification'], "172", "20", message_data['carrier_name']], None, None, 
         [message_data['means_of_transport_identification'], "103", None, message_data['means_of_transport']]))
@@ -54,30 +54,30 @@ def add_details_of_transport_and_arrival(message : Message, message_data : dict)
     message.add_segment(Segment("DTM", [ "232", message_data['arrival_datetime_scheduled'], "203"]))
 
 #GIS+23'
-def add_general_indicator(message : Message, message_data : dict):
+def add_general_indicator(message : SegmentCollection, message_data : dict):
     message.add_segment(Segment("GIS", "23"))
 
 #EQD+BL+EQ123456+7:ZZZ:5++3+5'
 #MEA+AAE+G+KGM:55814'
 #MEA+AAE+AAW+MTQ:0'
-def add_equipment(message : Message, equipment_data : dict):
+def add_equipment(message : SegmentCollection, equipment_data : dict):
     #Blocks, refrigerated tank
     message.add_segment(Segment("EQD","BL", equipment_data['identification_number'],["7", "ZZZ", "5"], None, "3", "5"))
     message.add_segment(Segment("MEA","AAE", "G", ["KGM", equipment_data['total_gross_weight']])) # weight
     message.add_segment(Segment("MEA","AAE", "AAW", ["MTQ", "100" ])) # volume
     
-def add_consigments(message : Message, message_data : dict):
+def add_consigments(message : SegmentCollection, message_data : dict):
     consignments = message_data['consignments']
     for consignment in consignments:
         add_consigment_details(message, consignment)
 
-def add_equipments(message : Message, message_data : dict):
+def add_equipments(message : SegmentCollection, message_data : dict):
     equipments = message_data['equipments']
     for equipment in equipments:
         add_equipment(message, equipment)
 
 # GRP5 A group of segments specifying the details of each consignment.
-def add_consigment_details(message : Message, consignment : dict):
+def add_consigment_details(message : SegmentCollection, consignment : dict):
     #CNI+1+DOCV373MOB909999'
     message.add_segment(Segment("CNI", consignment['cni_sequence_number'], consignment['cni_document_number'] + "-0")) # master bill number
     #RFF+BM:DOCV373MOB909999'
@@ -278,7 +278,7 @@ if __name__ == '__main__':
         message_data['interchangeControlReference'] = '$src_number'
         message_data['message_reference_number'] = '$msg_ref'
 
-    message = Message()
+    message = SegmentCollection()
     add_headers(message, message_data)
     add_cargo_report_sender_info(message, message_data)
     add_details_of_transport_and_arrival(message, message_data)

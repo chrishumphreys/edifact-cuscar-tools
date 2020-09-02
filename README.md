@@ -10,9 +10,11 @@ python3 -m venv edifact-cuscar-env
 ``` bash
 git clone https://github.com/nerdocs/pydifact
 cd pydifact
-python setup.py install
+pip3 install -e .
 cd ..
 ```
+
+Note 02/09/20 : update to use new collections API from pydifact rather than legacy message API.
 
 ## Pretty print
 
@@ -39,7 +41,7 @@ python print.py --unknown sample-edifact/simple.edi
 ### display to stdout
 
 ``` bash
-python generate.py  sample-edifact/template.edi
+python generate.py  sample-edifact/simple.edi
 ```
 
 ### write to file
@@ -53,7 +55,7 @@ python generate.py  sample-edifact/template.edi output.edi
 Rather than generating random values for all fields, you can specify some to use. This is useful for linking consignments together.
 
 ``` bash
-python generate.py sample-edifact/template.edi output.edi \
+python generate.py sample-edifact/simple.edi output.edi \
 --consignee "A Consignee" \
 --consignor "A Consignor" \
 --supplier "A Supplier" \
